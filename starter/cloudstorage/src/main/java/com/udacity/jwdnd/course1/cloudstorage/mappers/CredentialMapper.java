@@ -9,6 +9,9 @@ import java.util.List;
 @Mapper
 public interface CredentialMapper {
 
+    @Select("SELECT * FROM CREDENTIALS WHERE userid = #{userid}")
+    List<Credential> selectCredentialsByUserid(@Param("userid") Integer userid);
+
     @Select("SELECT * FROM CREDENTIALS WHERE credentialid = #{id}")
     Credential selectCredentialById(@Param("id") Integer id);
 
@@ -16,7 +19,7 @@ public interface CredentialMapper {
     List<Credential> selectAllCredentials();
 
     @Insert("INSERT INTO CREDENTIALS (credentialid, url, username, key, password, userid)" +
-            "VALUES (#{crendentials}, #{url}, #{username}, #{key}, #{password}, #{userid})")
+            "VALUES (#{credentialid}, #{url}, #{username}, #{key}, #{password}, #{userid})")
     int insertCredential(Credential credential);
 
     @Delete("DELETE FROM CRENDENTIALS WHERE crendentialid = #{id}")

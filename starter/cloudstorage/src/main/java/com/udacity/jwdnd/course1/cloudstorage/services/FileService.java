@@ -22,16 +22,17 @@ public class FileService {
         fileMapper.insertFile(file);
     }
 
-    public int deleteFile(int fileId) {
-        return fileMapper.deleteFile(fileId);
+    public boolean deleteFile(int fileId) {
+        fileMapper.deleteFile(fileId);
+        return fileMapper.selectFileById(fileId) == null;
     }
 
     public boolean isFileNameAvailable(String filename) {
         return fileMapper.selectFileByFilename(filename) == null;
     }
 
-    public List<File> getAllFiles(){
-        return fileMapper.selectAllFiles();
+    public List<File> getAllFiles(Integer userid){
+        return fileMapper.selectFilesByUserid(userid);
     }
 
     public File getFileByName(String name) {

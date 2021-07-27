@@ -1,9 +1,8 @@
 package com.udacity.jwdnd.course1.cloudstorage.controllers;
 
 import com.udacity.jwdnd.course1.cloudstorage.mappers.UserMapper;
-import com.udacity.jwdnd.course1.cloudstorage.models.File;
-import com.udacity.jwdnd.course1.cloudstorage.models.Note;
-import com.udacity.jwdnd.course1.cloudstorage.models.NoteForm;
+import com.udacity.jwdnd.course1.cloudstorage.models.*;
+import com.udacity.jwdnd.course1.cloudstorage.services.CredentialService;
 import com.udacity.jwdnd.course1.cloudstorage.services.FileService;
 import com.udacity.jwdnd.course1.cloudstorage.services.NoteService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
@@ -25,23 +24,28 @@ public class HomeController {
     FileService fileService;
     UserService userService;
     NoteService noteService;
+    CredentialService credentialService;
 
-    public HomeController(FileService fileService, UserService userService, NoteService noteService) {
+    public HomeController(FileService fileService, UserService userService, NoteService noteService, CredentialService credentialService) {
         this.fileService = fileService;
         this.userService = userService;
         this.noteService = noteService;
+        this.credentialService = credentialService;
     }
 
     @GetMapping()
-    public String toHome(Model model, NoteForm noteForm) {
+    public String toHome(Model model, NoteForm noteForm, CredentialForm credentialForm, Authentication au) {
+        int userid = userService.getUser(au.getName()).getUserid();
         //查出所有的Filename 并传给model显示
-        List<File> allFiles = fileService.getAllFiles();
+        List<File> allFiles = fileService.getAllFiles(userid);
 //        System.out.println(allFiles);
         model.addAttribute("fileLists", allFiles);
         //查出所有的Notes 传给model显示
-        List<Note> allNotes = noteService.getAllNotes();
+        List<Note> allNotes = noteService.getAllNotes(userid);
         model.addAttribute("noteLists", allNotes);
         //查出所有的Credentials，传给model显示
+        List<CredentialForm> allCredentialsForm = credentialService.getAllCredentialForms(userid);
+        model.addAttribute("credLists", allCredentialsForm);
 
         return "/home";
     }

@@ -50,8 +50,7 @@ public class FileController {
 
     @RequestMapping("/delete/{fileId}")
     public String deleteFile(@PathVariable Integer fileId, Model model) {
-        int row = fileService.deleteFile(fileId);
-        if (row > 1) {
+        if (fileService.deleteFile(fileId)) {
             model.addAttribute("success","true");
         }
         return "/result";

@@ -10,43 +10,43 @@ import java.util.List;
 @Service
 public class NoteService {
     NoteMapper noteMapper;
-    UserService userService;
 
-    public NoteService(NoteMapper noteMapper, UserService userService) {
+
+    public NoteService(NoteMapper noteMapper) {
         this.noteMapper = noteMapper;
-        this.userService = userService;
     }
 
     public Note selectNote(Integer id) {
         return noteMapper.selectNoteById(id);
     }
 
-    public int addNote(NoteForm noteForm, String username) {
+    public int addNote(NoteForm noteForm, Integer userid) {
         int x;
         if(noteForm.getNoteId() == null) {
             x = noteMapper.insertNote(new Note(noteForm.getNoteId(),
                     noteForm.getNoteTitle(),
                     noteForm.getNoteDescription(),
-                    userService.getUser(username).getUserid()));
+                    userid));
         } else {
-            x = editNote(noteForm, username);
+            x = editNote(noteForm, userid);
         }
         return x;
     }
 
-    public int editNote(NoteForm noteForm, String username) {
+    public int editNote(NoteForm noteForm, Integer userid) {
         return noteMapper.updateNote(new Note(noteForm.getNoteId(),
                 noteForm.getNoteTitle(),
                 noteForm.getNoteDescription(),
-                userService.getUser(username).getUserid()));
+                userid));
     }
 
-    public int deleteNote(Integer noteId) {
-        return noteMapper.deleteNote(noteId);
+    public boolean deleteNote(Integer noteId) {
+        noteMapper.deleteNote(noteId);
+        return noteMapper.selectNoteById(noteId) == null;
     }
 
-    public List<Note> getAllNotes() {
-        return noteMapper.selectAllNotes();
+    public List<Note> getAllNotes(Integer userid) {
+        return noteMapper.selectNotesByUserid(userid);
     }
 
 }
