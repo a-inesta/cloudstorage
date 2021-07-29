@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 @RequestMapping("/note")
@@ -21,12 +22,12 @@ public class NoteController {
         this.userService = userService;
     }
 
-    @RequestMapping("/add")
+    @RequestMapping(value = "/add",method = RequestMethod.POST)
     public String addNote(NoteForm noteForm, Model model, Authentication au) {
         if (noteService.addNote(noteForm,userService.getUser(au.getName()).getUserid()) == 1) {
-            model.addAttribute("success", "操作成功");
+            model.addAttribute("success", "Note added successfully!");
         } else {
-            model.addAttribute("error", "笔记添加失败");
+            model.addAttribute("error", "Note adding failed!");
         }
         return "result";
     }
@@ -34,9 +35,9 @@ public class NoteController {
     @RequestMapping("/edit")
     public String editNote( NoteForm noteForm, Model model, Authentication au) {
         if (noteService.editNote(noteForm,userService.getUser(au.getName()).getUserid()) == 1) {
-            model.addAttribute("success", "笔记修改成功");
+            model.addAttribute("success", "Note modification succeeded!");
         } else {
-            model.addAttribute("error", "笔记修改失败");
+            model.addAttribute("error", "Note modification failed!");
         }
         return "result";
     }
@@ -44,8 +45,10 @@ public class NoteController {
     @RequestMapping("/delete/{noteId}")
     public String deleteNote(@PathVariable Integer noteId, Model model) {
         if(noteService.deleteNote(noteId)){
-            model.addAttribute("success", "笔记删除成功");
+            model.addAttribute("success", "Note deleted successfully!");
+        } else {
+            model.addAttribute("error", "Note deletion failed");
         }
-        return "result";
+        return "/result";
     }
 }

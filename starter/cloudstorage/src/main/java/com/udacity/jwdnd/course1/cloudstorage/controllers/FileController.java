@@ -29,42 +29,48 @@ public class FileController {
     public String uploadFile(@RequestParam("fileUpload") MultipartFile multipartFile, Model model, Authentication authentication) {
         String filename = multipartFile.getOriginalFilename();
         Integer userid = userService.getUser(authentication.getName()).getUserid();
+        String error = null;
         if (!fileService.isFileNameAvailable(filename, userid)) {
-            model.addAttribute("error","文件名重复");
-            return "result";
+            error = "duplicate file name!";
+        }
+        if (error == null) {
+            try {
+                fileService.addFile(new File(null, filename,
+                        multipartFile.getContentType(),
+                        multipartFile.getSize() + "",
+                        userid,
+                        multipartFile.getBytes()));
+            } catch (IOException e) {
+                e.printStackTrace();
+                error = "IOException:" + e.getLocalizedMessage();
+            }
         }
 
-        try {
-            fileService.addFile(new File(null, filename,
-                    multipartFile.getContentType(),
-                    multipartFile.getSize() + "",
-                    userid,
-                    multipartFile.getBytes()));
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (error == null) {
+            model.addAttribute("success","The file was uploaded successfully!");
+        } else {
+            model.addAttribute("error", error);
         }
-
-        model.addAttribute("success","true");
         return "result";
     }
 
     @RequestMapping("/delete/{fileId}")
     public String deleteFile(@PathVariable Integer fileId, Model model) {
         if (fileService.deleteFile(fileId)) {
-            model.addAttribute("success","true");
+            model.addAttribute("success","File deletion succeeded!");
+        } else {
+            model.addAttribute("error", "File deletion failed!");
         }
         return "/result";
     }
 
     @RequestMapping("/view/{fileId}")
     @ResponseBody
-    public String viewFile(Model model, @PathVariable Integer fileId,OutputStream os, HttpServletResponse response) {
+    public String viewFile(@PathVariable Integer fileId,OutputStream os, HttpServletResponse response) {
         File file = fileService.getFileById(fileId);
         String fileName = file.getFilename();
         byte[] fileNameBytes = fileName.getBytes(StandardCharsets.UTF_8);
         fileName = new String(fileNameBytes, 0, fileNameBytes.length, StandardCharsets.ISO_8859_1);
-        System.out.println("encodedName: " + fileName);
-        System.out.println("originalName: " + file.getFilename());
         response.reset();
         response.setContentType("application/octet-stream");
         response.setCharacterEncoding("utf-8");
@@ -76,9 +82,9 @@ public class FileController {
             os.flush();
         } catch (IOException e) {
             e.printStackTrace();
-            return "下载失败";
+            return "File download failed!";
         }
 
-        return "下载成功";
+        return "File downloaded successfully!";
     }
 }

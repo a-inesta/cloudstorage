@@ -38,7 +38,6 @@ public class HomeController {
         int userid = userService.getUser(au.getName()).getUserid();
         //查出所有的Filename 并传给model显示
         List<File> allFiles = fileService.getAllFiles(userid);
-//        System.out.println(allFiles);
         model.addAttribute("fileLists", allFiles);
         //查出所有的Notes 传给model显示
         List<Note> allNotes = noteService.getAllNotes(userid);
