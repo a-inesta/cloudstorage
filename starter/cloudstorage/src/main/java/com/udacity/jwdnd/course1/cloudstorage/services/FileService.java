@@ -27,15 +27,19 @@ public class FileService {
         return fileMapper.selectFileById(fileId) == null;
     }
 
-    public boolean isFileNameAvailable(String filename) {
-        return fileMapper.selectFileByFilename(filename) == null;
+    public boolean isFileNameAvailable(String filename, Integer userid) {
+        return fileMapper.selectFileByFilename(filename, userid) == null;
+    }
+
+    public File getFileById(Integer fileId) {
+        return fileMapper.selectFileById(fileId);
     }
 
     public List<File> getAllFiles(Integer userid){
         return fileMapper.selectFilesByUserid(userid);
     }
 
-    public File getFileByName(String name) {
-        return fileMapper.selectFileByFilename(name);
+    public File getFileByName(String name, Integer userid) {
+        return fileMapper.selectFileByFilename(name, userid);
     }
 }

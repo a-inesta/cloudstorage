@@ -33,6 +33,6 @@ public interface FileMapper {
     @Select("SELECT filename FROM FILES")
     List<String> selectAllFilenames();
 
-    @Select("SELECT * FROM FILES WHERE filename = #{filename}")
-    File selectFileByFilename(String filename);
+    @Select("SELECT * FROM FILES WHERE userid = #{userid} AND filename = #{filename} ")
+    File selectFileByFilename(String filename, Integer userid);
 }
