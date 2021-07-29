@@ -124,7 +124,8 @@ class CloudStorageApplicationTests {
 		hp.addNewNote(originalTitle,originalDescription);
 		hp.toHomePage();
 
-		hp.editNote(newTitle, newDescription);
+		hp.editNote(originalTitle,newTitle, newDescription);
+
 
 		driver.get("http://localhost:" + this.port + "/home");
 		hp = new HomePage(driver);
@@ -143,4 +144,40 @@ class CloudStorageApplicationTests {
 	}
 
 
+	@Test
+	public void testDeleteNote() {
+		String username = "qwegfffddaa";
+		String password = "dasdqwefaasd";
+		String firstname = "Jerry";
+		String lastname = "Lee";
+		String originalTitle = "test";
+		String originalDescription = "originalDescription";
+
+		driver.get("http://localhost:" + this.port + "/signup");
+		SignupPage sp = new SignupPage(driver);
+		sp.signup(firstname,lastname,username,password);
+
+		driver.get("http://localhost:" + this.port + "/login");
+		LoginPage lp = new LoginPage(driver);
+		lp.login(username,password);
+
+		HomePage hp = null;
+		driver.get("http://localhost:" + this.port + "/home");
+		hp = new HomePage(driver);
+		hp.addNewNote(originalTitle,originalDescription);
+		hp.toHomePage();
+
+		List<WebElement> noteTitle = driver.findElements(By.className("noteTitle"));
+		List<WebElement> noteDescription = driver.findElements(By.className("noteDescription"));
+
+		assertEquals(noteTitle.size(),1);
+		assertEquals(noteDescription.size(),1);
+
+		hp.deleteNote(originalTitle);
+		noteTitle = driver.findElements(By.className("noteTitle"));
+		noteDescription = driver.findElements(By.className("noteDescription"));
+		assertEquals(noteTitle.size(),0);
+		assertEquals(noteDescription.size(),0);
+
+	}
 }

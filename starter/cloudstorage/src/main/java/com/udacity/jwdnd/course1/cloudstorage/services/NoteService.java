@@ -40,13 +40,20 @@ public class NoteService {
                 userid));
     }
 
-    public boolean deleteNote(Integer noteId) {
+    public boolean deleteNote(Integer noteId, Integer userid) throws IllegalAccessException {
+        if(!specificUserid(noteId).equals(userid)) {
+            throw new IllegalAccessException("no such element");
+        }
         noteMapper.deleteNote(noteId);
         return noteMapper.selectNoteById(noteId) == null;
     }
 
     public List<Note> getAllNotes(Integer userid) {
         return noteMapper.selectNotesByUserid(userid);
+    }
+
+    public Integer specificUserid(Integer noteId) {
+        return noteMapper.selectSpecificUserid(noteId);
     }
 
 }

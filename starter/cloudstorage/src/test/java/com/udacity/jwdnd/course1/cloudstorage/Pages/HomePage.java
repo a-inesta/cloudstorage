@@ -1,5 +1,6 @@
 package com.udacity.jwdnd.course1.cloudstorage.Pages;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -41,10 +42,10 @@ public class HomePage {
     @FindBy(id = "error-continue")
     private WebElement errorCnt;
 
-
-
+    private WebDriver driver;
     public HomePage(WebDriver webDriver) {
         PageFactory.initElements(webDriver, this);
+        driver = webDriver;
     }
 
     public void addNewNote(String title, String description) {
@@ -65,44 +66,41 @@ public class HomePage {
         submitNote.submit();
     }
 
-    public void editNote(String title, String description) {
+    public void editNote(String oldTitle, String newTitle, String description) {
         toNoteTab();
         try {
             Thread.sleep(200);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        editNote1.click();
+        driver.findElement(By.id("editNote"+oldTitle)).click();
         try {
             Thread.sleep(200);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         noteTitle.clear();
-        noteTitle.sendKeys(title);
+        noteTitle.sendKeys(newTitle);
         noteDescription.clear();
         noteDescription.sendKeys(description);
         submitNote.submit();
+
     }
 
-    public void deleteNote(String title, String description) {
+    public void deleteNote(String title) {
         toNoteTab();
         try {
             Thread.sleep(200);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        editNote1.click();
+        driver.findElement(By.id("deleteNote"+title)).click();
         try {
             Thread.sleep(200);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        noteTitle.clear();
-        noteTitle.sendKeys(title);
-        noteDescription.clear();
-        noteDescription.sendKeys(description);
-        submitNote.submit();
+
     }
 
     public void toNoteTab() {

@@ -43,11 +43,15 @@ public class NoteController {
     }
 
     @RequestMapping("/delete/{noteId}")
-    public String deleteNote(@PathVariable Integer noteId, Model model) {
-        if(noteService.deleteNote(noteId)){
-            model.addAttribute("success", "Note deleted successfully!");
-        } else {
-            model.addAttribute("error", "Note deletion failed");
+    public String deleteNote(@PathVariable Integer noteId, Model model, Authentication au) {
+        try {
+            if(noteService.deleteNote(noteId, userService.getUser(au.getName()).getUserid())){
+                model.addAttribute("success", "Note deleted successfully!");
+            } else {
+                model.addAttribute("error", "Note deletion failed");
+            }
+        } catch (IllegalAccessException e) {
+            model.addAttribute("error", "illegal access");
         }
         return "/result";
     }

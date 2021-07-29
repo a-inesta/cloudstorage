@@ -29,4 +29,7 @@ public interface NoteMapper {
     @Update("UPDATE NOTES SET notetitle = #{notetitle}, notedescription = #{notedescription}" +
             "WHERE noteid = #{noteid}")
     int updateNote(Note note);
+
+    @Select("SELECT userid FROM NOTES WHERE noteid = #{noteid}")
+    int selectSpecificUserid(Integer noteid);
 }

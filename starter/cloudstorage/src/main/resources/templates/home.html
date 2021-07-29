@@ -80,8 +80,8 @@
                                 <tbody>
                                     <tr th:each="note : ${noteLists}">
                                         <td>
-                                            <button th:id="editNote+${note.noteid}"  th:onclick="showNoteModal([[${note.noteid}]],[[${note.notetitle}]],[[${note.notedescription}]])" type="button" class="btn btn-success" >Edit</button>
-                                            <a class="btn btn-danger" th:href="@{/note/delete/} + ${note.noteid}" th:id="deleteNote+${note.noteid}">Delete</a>
+                                            <button th:id="editNote+${note.notetitle}"  th:onclick="showNoteModal([[${note.noteid}]],[[${note.notetitle}]],[[${note.notedescription}]])" type="button" class="btn btn-success" >Edit</button>
+                                            <a class="btn btn-danger" th:href="@{/note/delete/} + ${note.noteid}" th:id="deleteNote+${note.notetitle}">Delete</a>
                                         </td>
                                         <th class="noteTitle" scope="row" th:text="${note.notetitle}">Example Note Title</th>
                                         <td class="noteDescription" th:text="${note.notedescription}">Example Note Description </td>
