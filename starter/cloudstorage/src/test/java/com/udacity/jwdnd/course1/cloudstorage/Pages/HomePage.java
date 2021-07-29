@@ -5,6 +5,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
+import java.util.TreeMap;
+
 public class HomePage {
     @FindBy(id = "nav-files-tab")
     private WebElement toFileTab;
@@ -27,11 +29,17 @@ public class HomePage {
     @FindBy(id = "noteSubmit")
     private WebElement submitNote;
 
-    @FindBy(id = "noteEdit1")
+    @FindBy(id = "editNote1")
     private WebElement editNote1;
 
-    @FindBy(id = "noteDelete")
+    @FindBy(id = "deleteNote1")
     private WebElement deleteNote1;
+
+    @FindBy(id = "success-continue")
+    private WebElement successCnt;
+
+    @FindBy(id = "error-continue")
+    private WebElement errorCnt;
 
 
 
@@ -40,7 +48,7 @@ public class HomePage {
     }
 
     public void addNewNote(String title, String description) {
-        toNoteTab.click();
+        toNoteTab();
         try {
             Thread.sleep(200);
         } catch (InterruptedException e) {
@@ -58,11 +66,57 @@ public class HomePage {
     }
 
     public void editNote(String title, String description) {
-        toNoteTab.click();
+        toNoteTab();
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         editNote1.click();
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        noteTitle.clear();
         noteTitle.sendKeys(title);
+        noteDescription.clear();
         noteDescription.sendKeys(description);
         submitNote.submit();
+    }
+
+    public void deleteNote(String title, String description) {
+        toNoteTab();
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        editNote1.click();
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        noteTitle.clear();
+        noteTitle.sendKeys(title);
+        noteDescription.clear();
+        noteDescription.sendKeys(description);
+        submitNote.submit();
+    }
+
+    public void toNoteTab() {
+        toNoteTab.click();
+    }
+
+    public void toHomePage() {
+        if (successCnt != null) {
+            successCnt.click();
+        } else if (errorCnt != null){
+            errorCnt.click();
+        } else {
+            System.out.println("Neither success nor error exists.");
+        }
     }
 
 }
